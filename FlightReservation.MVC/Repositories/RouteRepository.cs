@@ -14,15 +14,18 @@ public sealed class RouteRepository(ApplicationDbContext context)
 
     public IEnumerable<Route> GetRoutesByParameter(GetRouteDto request)
     {
+        var utcDate = request.Date.ToUniversalTime().AddDays(1); ;
+
         return context.Set<Route>()
-            .Where(p => 
-                   p.Departure == request.Departure && 
-                   p.Arrival == request.Arrival && 
-                   p.DepartureTime.Date == request.Date.Date)
-            .Include(p=> p.Plane)
+            .Where(p =>
+                   p.Departure == request.Departure &&
+                   p.Arrival == request.Arrival &&
+                   p.DepartureTime.Date == utcDate.Date)
+            .Include(p => p.Plane)
             .OrderBy(p => p.DepartureTime)
             .ToList();
     }
+
 
     public IEnumerable<Plane> GetlAllPlane()
     {

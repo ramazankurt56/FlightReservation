@@ -47,7 +47,7 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
 #region Context
 builder.Services.AddDbContext<ApplicationDbContext>(opt =>
 {
-    opt.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"));
+    opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 #endregion
 
@@ -86,19 +86,23 @@ app.UseRequestLocalization(app.Services.GetRequiredService<IOptions<RequestLocal
 app.UseRouting();
 
 app.UseAuthorization();
-
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    var result = context.Set<User>().Any(p => p.Email == "y225012058@sakarya.edu.tr");
+    context.Database.Migrate();
+}
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    var result = context.Set<User>().Any(p => p.Email == "admin@admin.com");
     if (!result)
     {
         User user = new()
         {
-            FirstName = "Ýhsan Eren",
-            LastName = "Delibaþ",
-            Email = "y225012058@sakarya.edu.tr",
-            Password = "sau"
+            FirstName = "Ramazan",
+            LastName = "kurt",
+            Email = "admin@admin.com",
+            Password = "1"
         };
 
         context.Set<User>().Add(user);
@@ -124,11 +128,7 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-using (var scope = app.Services.CreateScope())
-{
-    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    context.Database.Migrate();
-}
+
 
 app.MapControllerRoute(
     name: "default",

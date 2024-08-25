@@ -16,12 +16,15 @@ public class RoutesController(RouteRepository routeRepository) : Controller
     [HttpPost]
     public IActionResult Add(AddRouteDto request)
     {
+        DateTime arrivalTimeUtc = request.ArrivalTime.ToUniversalTime();
+        DateTime departureTimeUtc = request.DepartureTime.ToUniversalTime();
+
         Route route = new()
         {
             Arrival = request.Arrival,
             Departure = request.Departure,
-            ArrivalTime = request.ArrivalTime,
-            DepartureTime = request.DepartureTime,
+            ArrivalTime = arrivalTimeUtc,
+            DepartureTime = departureTimeUtc,
             PlaneId = request.PlaneId
         };
 
@@ -29,6 +32,7 @@ public class RoutesController(RouteRepository routeRepository) : Controller
 
         return RedirectToAction("Index");
     }
+
 
     [HttpGet]
     public IActionResult RemoveById(Guid id)

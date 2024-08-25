@@ -1,0 +1,37 @@
+services:
+  postgres:
+    image: postgres
+    restart: always
+    container_name: postgresdb
+    environment:
+      POSTGRES_DB: flight
+      POSTGRES_USER: flightsa
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - flight-network
+  flight-api:
+    restart: always
+    build:
+      context: .
+      dockerfile: ./FlightReservation.MVC/Dockerfile
+    depends_on:
+      - postgres
+    ports:
+      - "5020:8080"
+      - "5021:8081"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=flight;Username=flightsa;Password=${POSTGRES_PASSWORD}
+    networks:
+      - flight-network
+ 
+networks:
+  flight-network:
+    driver: bridge
+
+volumes:
+  flight_postgres_data:

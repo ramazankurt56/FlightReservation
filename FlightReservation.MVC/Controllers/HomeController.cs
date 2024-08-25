@@ -20,7 +20,7 @@ public class HomeController(
             return RedirectToAction("Index", "Admin");
         }
 
-        ViewBag.Date = DateTime.Now;   
+        ViewBag.Date = DateTime.UtcNow;   
 
         return View(new List<Route>());
     }
@@ -35,6 +35,7 @@ public class HomeController(
               
         return View(routes);
     }
+
 
     [HttpPost]
     public IActionResult AddTicket(AddTicketDto request)
