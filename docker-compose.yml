@@ -4,13 +4,13 @@ services:
     restart: always
     container_name: flightpostgresdb
     environment:
-      POSTGRES_DB: flight
+      POSTGRES_DB: flightdb
       POSTGRES_USER: flightsa
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5434:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - flight_postgres_data:/var/lib/postgresql/data
     networks:
       - flight-network
   flight-api:
@@ -25,7 +25,7 @@ services:
       - "5021:8081"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings__DefaultConnection=Host=postgres;Database=flight;Username=flightsa;Password=${POSTGRES_PASSWORD}
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=flightdb;Username=flightsa;Password=${POSTGRES_PASSWORD}
     networks:
       - flight-network
  
