@@ -2,7 +2,7 @@ services:
   postgres:
     image: postgres
     restart: always
-    container_name: postgresdb
+    container_name: flightpostgresdb
     environment:
       POSTGRES_DB: flight
       POSTGRES_USER: flightsa
